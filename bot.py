@@ -28,7 +28,6 @@ class TelegramClient:
                 chat_id=chat_id,
                 message_thread_id=thread_id,
                 text=text,
-                parse_mode="HTML",
                 disable_web_page_preview=True
             )
 

@@ -1,59 +1,78 @@
-import httpx
+import random
 import asyncio
 from collections import deque
+import httpx
 import feedparser
 
-from bot import send_msg
-
 from text_generator import generate_text
+from utils import random_user_agent_headers
 
 
-async def rss_parser(httpx_client, posted_q,
-                     n_test_chars, send_message_func=None):
+async def rss_parser(
+    httpx_client,
+    source,
+    rss_link,
+    posted_q,
+    n_test_chars=50,
+    check_pattern_func=None,
+    send_message_func=None,
+    logger=None,
+    timeout=10
+):
     '''Парсер rss ленты'''
-
-    rss_link = 'https://rssexport.rbc.ru/rbcnews/news/20/full.rss'
 
     while True:
         try:
-            response = await httpx_client.get(rss_link)
-        except:
-            await asyncio.sleep(10)
+            response = await httpx_client.get(rss_link, headers=random_user_agent_headers())
+            response.raise_for_status()
+        except Exception as e:
+            if not (logger is None):
+                logger.error(f'{source} rss error pass\n{e}')
+
+            await asyncio.sleep(timeout * 10)
             continue
 
         feed = feedparser.parse(response.text)
 
         for entry in feed.entries[::-1]:
-            summary = entry['summary']
+
+            summary = entry['summary'] or entry['description']
             title = entry['title']
             link = entry['links'][0]['href']
 
-            news_text = generate_text(title, summary, link, source="РБК")
+            news_text = f'{title}\n{summary}'
+
+            if not (check_pattern_func is None):
+                if not check_pattern_func(news_text):
+                    continue
 
             head = news_text[:n_test_chars].strip()
 
             if head in posted_q:
                 continue
 
+            post = generate_text(title, summary, link, source=source)
+
+
             if send_message_func is None:
-                pass
-                await send_msg(news_text)
+                print(post, '\n')
             else:
-                await send_message_func(f'rbc.ru\n{news_text}')
+                await send_message_func(post)
 
             posted_q.appendleft(head)
+            await asyncio.sleep(timeout)
 
-        await asyncio.sleep(60)
+        await asyncio.sleep(10 * timeout)
 
 
 if __name__ == "__main__":
+    source = 'www.rbc.ru'
+
+    rss_link = 'https://rssexport.rbc.ru/rbcnews/news/20/full.rss',
 
     # Очередь из уже опубликованных постов, чтобы их не дублировать
     posted_q = deque(maxlen=20)
 
-    # 50 первых символов от текста новости - это ключ для проверки повторений
-    n_test_chars = 50
-
     httpx_client = httpx.AsyncClient()
 
-    asyncio.run(rss_parser(httpx_client, posted_q, n_test_chars))
+    asyncio.run(rss_parser(httpx_client, source, rss_link, posted_q))
