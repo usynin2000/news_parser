@@ -1,5 +1,4 @@
 import asyncio
-import logging
 from collections import deque
 
 import httpx
@@ -7,18 +6,21 @@ from rss_parser import rss_parser  # Ensure this is the correct import path for 
 from utils import create_logger
 from bot import send_msg  # Ensure this is the correct import path for your project
 
+from env import MASS_MEDIA_THREAD, TECH_THREAD, ART_THREAD
+
 # RSS channels configuration
 rss_channels = {
-    'www.rbc.ru': 'https://rssexport.rbc.ru/rbcnews/news/20/full.rss',
-    'www.1prime.ru': 'https://1prime.ru/export/rss2/index.xml',
-    'www.interfax.ru': 'https://www.interfax.ru/rss.asp',
-    "www.livescience.com": "https://www.livescience.com/feeds/all",
-    'bloomberg.com': 'https://feeds.bloomberg.com/technology/news.rss'
+    'www.rbc.ru': ['https://rssexport.rbc.ru/rbcnews/news/20/full.rss', MASS_MEDIA_THREAD],
+    "www.vedomosti.ru": ["https://www.vedomosti.ru/rss/rubric/business.xml", MASS_MEDIA_THREAD],
+    "TECH www.vedomosti.ru": ["https://www.vedomosti.ru/rss/rubric/technology.xml", TECH_THREAD],
+    'www.interfax.ru': ['https://www.interfax.ru/rss.asp', MASS_MEDIA_THREAD],
+    'www.bloomberg.com': ['https://feeds.bloomberg.com/technology/news.rss', TECH_THREAD],
+    "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
 }
 
 # Configuration for post filtering
 n_test_chars = 50
-amount_messages = 100
+amount_messages = 150
 posted_q = deque(maxlen=amount_messages)
 timeout = 4
 
@@ -27,13 +29,13 @@ logger = create_logger('gazp')
 logger.info('Start...')
 
 
-async def send_message_func(text):
+async def send_message_func(text, thread, parse_mode):
     logger.info(text)
     retry_after = None
     while True:
         try:
-            await send_msg(text)
-            await asyncio.sleep(timeout)
+            await send_msg(text, thread, parse_mode)
+            await asyncio.sleep(timeout * 2)
             break
         except Exception as e:
             if '429' in str(e):
@@ -59,31 +61,35 @@ async def fetch_with_retry(httpx_client, url, retries=3, timeout=10):
                 raise e
 
 
-async def wrapper(httpx_client, source, rss_link):
-    try:
-        response = await fetch_with_retry(httpx_client, rss_link)
-        await rss_parser(
-            httpx_client,
-            source,
-            rss_link,
-            posted_q,
-            n_test_chars,
-            lambda text: True,  # Placeholder for actual filtering function
-            send_message_func,
-            logger,
-            timeout
-        )
-    except Exception as e:
-        message = f'⚠️ ERROR: {source} parser is down! \n{e}'
-        logger.error(message)
-        print(message)
+async def wrapper(httpx_client, source, rss_link, thread):
+    is_done = False
+    while not is_done:
+        try:
+            response = await fetch_with_retry(httpx_client, rss_link)
+            await rss_parser(
+                httpx_client,
+                source,
+                rss_link,
+                posted_q,
+                n_test_chars,
+                lambda text: True,  # Placeholder for actual filtering function
+                send_message_func,
+                thread,
+                logger,
+                timeout
+            )
+            is_done = True
+        except Exception as e:
+            message = f'⚠️ ERROR: {source} parser is down! \n{e}'
+            logger.error(message)
+            await asyncio.sleep(timeout * 20)
 
 
 async def main():
     async with httpx.AsyncClient() as httpx_client:
         tasks = []
         for source, rss_link in rss_channels.items():
-            tasks.append(wrapper(httpx_client, source, rss_link))
+            tasks.append(wrapper(httpx_client, source, rss_link[0], rss_link[1]))
             await asyncio.sleep(timeout)
 
         await asyncio.gather(*tasks)

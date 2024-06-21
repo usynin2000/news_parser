@@ -6,6 +6,7 @@ import feedparser
 
 from text_generator import generate_text
 from utils import random_user_agent_headers
+from env import ALERT_THREAD, ART_THREAD
 
 
 async def rss_parser(
@@ -16,8 +17,10 @@ async def rss_parser(
     n_test_chars=50,
     check_pattern_func=None,
     send_message_func=None,
+    thread=ALERT_THREAD,
     logger=None,
-    timeout=10
+    timeout=10,
+    parse_mode=None,
 ):
     '''Парсер rss ленты'''
 
@@ -34,9 +37,13 @@ async def rss_parser(
 
         feed = feedparser.parse(response.text)
 
-        for entry in feed.entries[::-1]:
+        for entry in feed.entries[:5]:
 
-            summary = entry['summary'] or entry['description']
+            try:
+                summary = entry['summary']
+            except KeyError:
+                summary = ""
+
             title = entry['title']
             link = entry['links'][0]['href']
 
@@ -57,7 +64,9 @@ async def rss_parser(
             if send_message_func is None:
                 print(post, '\n')
             else:
-                await send_message_func(post)
+                if thread == ART_THREAD:
+                    parse_mode = "HTML"
+                await send_message_func(post, thread, parse_mode)
 
             posted_q.appendleft(head)
             await asyncio.sleep(timeout)

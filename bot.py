@@ -14,6 +14,7 @@ class TelegramClient:
         chat_id: str = CHAT_ID,
         thread_id: int = ALERT_THREAD,
         photo: str | None = None,
+        parse_mode: str | None = None,
     ) -> None:
         if photo:
             await self.bot.send_photo(
@@ -21,23 +22,25 @@ class TelegramClient:
                 message_thread_id=thread_id,
                 photo=photo,
                 caption=text,
-                parse_mode="HTML",
+                parse_mode=parse_mode
             )
         else:
             await self.bot.send_message(
                 chat_id=chat_id,
                 message_thread_id=thread_id,
                 text=text,
-                disable_web_page_preview=True
+                disable_web_page_preview=True,
+                parse_mode=parse_mode
+
             )
 
     async def close(self):
         await self.bot.close_session()
 
 
-async def send_msg(text: str):
+async def send_msg(text: str, thread: int, parse_mode: str | None = None):
     bot = TelegramClient(BOT_TOKEN)
-    await bot.send_alert(text)
+    await bot.send_alert(text, thread_id=thread, parse_mode=parse_mode)
     await bot.close()
 
 if __name__ == "__main__":
