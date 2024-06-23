@@ -2,7 +2,9 @@ import asyncio
 from collections import deque
 
 import httpx
-from rss_parser import rss_parser  # Ensure this is the correct import path for your project
+from rss_parser import (
+    rss_parser,
+)  # Ensure this is the correct import path for your project
 from utils import create_logger
 from bot import send_msg  # Ensure this is the correct import path for your project
 
@@ -10,12 +12,24 @@ from env import MASS_MEDIA_THREAD, TECH_THREAD, ART_THREAD
 
 # RSS channels configuration
 rss_channels = {
-    'www.rbc.ru': ['https://rssexport.rbc.ru/rbcnews/news/20/full.rss', MASS_MEDIA_THREAD],
-    "www.vedomosti.ru": ["https://www.vedomosti.ru/rss/rubric/business.xml", MASS_MEDIA_THREAD],
-    "TECH www.vedomosti.ru": ["https://www.vedomosti.ru/rss/rubric/technology.xml", TECH_THREAD],
-    'www.interfax.ru': ['https://www.interfax.ru/rss.asp', MASS_MEDIA_THREAD],
-    'www.bloomberg.com': ['https://feeds.bloomberg.com/technology/news.rss', TECH_THREAD],
-    "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
+    "www.rbc.ru": [
+        "https://rssexport.rbc.ru/rbcnews/news/20/full.rss",
+        MASS_MEDIA_THREAD,
+    ],
+    "www.vedomosti.ru": [
+        "https://www.vedomosti.ru/rss/rubric/business.xml",
+        MASS_MEDIA_THREAD,
+    ],
+    "TECH www.vedomosti.ru": [
+        "https://www.vedomosti.ru/rss/rubric/technology.xml",
+        TECH_THREAD,
+    ],
+    "www.interfax.ru": ["https://www.interfax.ru/rss.asp", MASS_MEDIA_THREAD],
+    "www.bloomberg.com": [
+        "https://feeds.bloomberg.com/technology/news.rss",
+        TECH_THREAD,
+    ],
+    # "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
 }
 
 # Configuration for post filtering
@@ -25,29 +39,31 @@ posted_q = deque(maxlen=amount_messages)
 timeout = 4
 
 # Initialize logger
-logger = create_logger('gazp')
-logger.info('Start...')
+logger = create_logger("RSS_LOG")
+logger.info("Start...")
 
 
-async def send_message_func(text, thread, parse_mode):
+async def send_message_func(text, thread, parse_mode=None):
     logger.info(text)
-    retry_after = None
+    retry_after = 1
     while True:
         try:
             await send_msg(text, thread, parse_mode)
             await asyncio.sleep(timeout * 2)
-            break
         except Exception as e:
-            if '429' in str(e):
-                retry_after = int(str(e).split('retry after')[1].strip())
-                logger.error(f'Too Many Requests: retrying after {retry_after} seconds')
+            if "429" in str(e):
+                retry_after = int(str(e).split("retry after")[1].strip()) + 2
+                logger.error(f"Too Many Requests: retrying after {retry_after} seconds")
                 await asyncio.sleep(retry_after)
             else:
-                logger.error(f'Failed to send message: {e}')
+                logger.error(f"Failed to send message: {e}")
                 break
+        finally:
+            break
 
 
-async def fetch_with_retry(httpx_client, url, retries=3, timeout=10):
+# Query to check if parser works
+async def fetch_with_retry(httpx_client, url, retries=3, timeout=20):
     for attempt in range(retries):
         try:
             response = await httpx_client.get(url, timeout=timeout)
@@ -55,7 +71,7 @@ async def fetch_with_retry(httpx_client, url, retries=3, timeout=10):
             return response
         except (httpx.RequestError, httpx.HTTPStatusError) as e:
             if attempt < retries - 1:
-                await asyncio.sleep(2 ** attempt)  # Exponential backoff
+                await asyncio.sleep(2**attempt)  # Exponential backoff
                 continue
             else:
                 raise e
@@ -65,7 +81,7 @@ async def wrapper(httpx_client, source, rss_link, thread):
     is_done = False
     while not is_done:
         try:
-            response = await fetch_with_retry(httpx_client, rss_link)
+            await fetch_with_retry(httpx_client, rss_link)
             await rss_parser(
                 httpx_client,
                 source,
@@ -76,13 +92,14 @@ async def wrapper(httpx_client, source, rss_link, thread):
                 send_message_func,
                 thread,
                 logger,
-                timeout
+                timeout,
             )
-            is_done = True
         except Exception as e:
-            message = f'⚠️ ERROR: {source} parser is down! \n{e}'
+            message = f"⚠️ ERROR: {source} parser is down! \n{e}"
             logger.error(message)
             await asyncio.sleep(timeout * 20)
+        finally:
+            is_done = True
 
 
 async def main():
@@ -99,6 +116,6 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except Exception as e:
-        message = f'⚠️ ERROR: main loop is down! \n{e}'
+        message = f"⚠️ ERROR: main loop is down! \n{e}"
         logger.error(message)
         print(message)

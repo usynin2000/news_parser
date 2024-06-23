@@ -1,4 +1,3 @@
-import random
 import asyncio
 from collections import deque
 import httpx
@@ -6,7 +5,7 @@ import feedparser
 
 from text_generator import generate_text
 from utils import random_user_agent_headers
-from env import ALERT_THREAD, ART_THREAD
+from env import ALERT_THREAD
 
 
 async def rss_parser(
@@ -20,17 +19,18 @@ async def rss_parser(
     thread=ALERT_THREAD,
     logger=None,
     timeout=10,
-    parse_mode=None,
 ):
-    '''Парсер rss ленты'''
+    """Парсер rss ленты"""
 
     while True:
         try:
-            response = await httpx_client.get(rss_link, headers=random_user_agent_headers())
+            response = await httpx_client.get(
+                rss_link, headers=random_user_agent_headers()
+            )
             response.raise_for_status()
         except Exception as e:
             if not (logger is None):
-                logger.error(f'{source} rss error pass\n{e}')
+                logger.error(f"{source} rss error pass\n{e}")
 
             await asyncio.sleep(timeout * 10)
             continue
@@ -40,34 +40,32 @@ async def rss_parser(
         for entry in feed.entries[:5]:
 
             try:
-                summary = entry['summary']
+                summary = entry["summary"]
             except KeyError:
                 summary = ""
 
-            title = entry['title']
-            link = entry['links'][0]['href']
+            title = entry["title"]
+            link = entry["links"][0]["href"]
 
-            news_text = f'{title}\n{summary}'
+            news_text = f"{title}\n{summary}"
 
             if not (check_pattern_func is None):
                 if not check_pattern_func(news_text):
                     continue
 
+            # check for dublicates
             head = news_text[:n_test_chars].strip()
-
             if head in posted_q:
                 continue
 
             post = generate_text(title, summary, link, source=source)
 
-
             if send_message_func is None:
-                print(post, '\n')
+                print(post, "\n")
             else:
-                if thread == ART_THREAD:
-                    parse_mode = "HTML"
-                await send_message_func(post, thread, parse_mode)
+                await send_message_func(post, thread)
 
+            # put in queue in the beginning
             posted_q.appendleft(head)
             await asyncio.sleep(timeout)
 
@@ -75,9 +73,9 @@ async def rss_parser(
 
 
 if __name__ == "__main__":
-    source = 'www.rbc.ru'
+    source = "www.rbc.ru"
 
-    rss_link = 'https://rssexport.rbc.ru/rbcnews/news/20/full.rss',
+    rss_link = ("https://rssexport.rbc.ru/rbcnews/news/20/full.rss",)
 
     # Очередь из уже опубликованных постов, чтобы их не дублировать
     posted_q = deque(maxlen=20)

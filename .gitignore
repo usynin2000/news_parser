@@ -105,6 +105,7 @@ celerybeat.pid
 
 # SageMath parsed files
 *.sage.py
+.session
 
 # Environments
 .env
@@ -118,6 +119,8 @@ venv.bak/
 # Spyder project settings
 .spyderproject
 .spyproject
+
+.session
 
 # Rope project settings
 .ropeproject
@@ -142,3 +145,5 @@ public_key
 /dumpdata
 
 key.json
+*.session
+
