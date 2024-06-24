@@ -6,11 +6,8 @@ from env import CHAT_ID
 
 from env import API_ID, API_HASH
 
-logger = create_logger("TelegramParser")
-logger.info("Start...")
 
-
-def telegram_parser(
+async def telegram_parser(
     session,
     api_id,
     api_hash,
@@ -25,7 +22,8 @@ def telegram_parser(
     telegram_channels_links = list(telegram_channels.values())
 
     client = TelegramClient(session, api_id, api_hash, base_logger=logger, loop=loop)
-    client.start()
+
+    await client.start()
 
     @client.on(events.NewMessage(chats=telegram_channels_links))
     async def handler(event):
@@ -48,15 +46,13 @@ def telegram_parser(
         channel = "@" + source.split("/")[-1]
         post = f"<b>{channel}</b>\n{link}\n{news_text}"
 
-        print(post, "\n")
-
         target_entity = await client.get_entity(int(CHAT_ID))
 
         try:
             await client.forward_messages(target_entity, event.message)
-            print("Message forwarded successfully.")
+            logger.info(f"✅ {post}")
         except Exception as e:
-            print(f"Failed to forward message: {e}")
+            logger.info(f"❌, {post} ERROR: {e}")
 
         posted_q.appendleft(head)
 
@@ -64,6 +60,9 @@ def telegram_parser(
 
 
 if __name__ == "__main__":
+
+    logger = create_logger("TelegramParser")
+    logger.info("Start...")
     # Initialize logger
 
     telegram_channels = {
@@ -80,6 +79,6 @@ if __name__ == "__main__":
     # Очередь из уже опубликованных постов, чтобы их не дублировать
     posted_q = deque(maxlen=20)
 
-    client = telegram_parser("gazp", API_ID, API_HASH, telegram_channels, posted_q)
+    client = telegram_parser("gazp", API_ID, API_HASH, telegram_channels, posted_q, logger=logger)
 
     client.run_until_disconnected()
