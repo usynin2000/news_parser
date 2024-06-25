@@ -3,7 +3,7 @@ import sys
 import random
 import httpx
 
-from user_agents import user_agent_list  # список из значений user-agent
+from user_agents import user_agent_list
 
 
 def create_logger(name, level=logging.INFO):

@@ -17,3 +17,5 @@ ART_THREAD = os.getenv("ART_THREAD")
 # 'HASH' account (to parse tg channels)
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
+
+STRING_SESSION = os.getenv("STRING_SESSION")

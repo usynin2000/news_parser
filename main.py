@@ -2,12 +2,13 @@ import asyncio
 from collections import deque
 
 import httpx
-from rss_parser import rss_parser  # Ensure this is the correct import path for your project
+from rss_parser import rss_parser
 from telegram_parser import telegram_parser
 from utils import create_logger
-from bot import send_msg  # Ensure this is the correct import path for your project
+from bot import send_msg
 
-from env import MASS_MEDIA_THREAD, TECH_THREAD, ART_THREAD, API_ID, API_HASH
+from env import MASS_MEDIA_THREAD, TECH_THREAD, API_ID, API_HASH, STRING_SESSION
+from telethon.sessions import StringSession
 
 telegram_channels = {
         1099860397: "https://t.me/rbc_news",
@@ -103,7 +104,7 @@ async def wrapper(httpx_client, source, rss_link, thread):
 
 
 async def main():
-    await telegram_parser("hash", API_ID, API_HASH, telegram_channels, posted_q, logger=logger)
+    await telegram_parser(StringSession(STRING_SESSION), API_ID, API_HASH, telegram_channels, posted_q, logger=logger)
     async with httpx.AsyncClient() as httpx_client:
         tasks = []
         for source, rss_link in rss_channels.items():

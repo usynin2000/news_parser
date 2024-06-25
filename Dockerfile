@@ -1,20 +1,34 @@
-#FROM python:3.10
-#
-#RUN apt-get install -yqq --no-install-recommends \
-#    && pip install 'feedparser==6.0.10' \
-#    && pip install 'Telethon==1.25.0' \
-#    && pip install 'telethon-cryptg==0.0.4' \
-#    && pip install 'httpx==0.23.0'
-#
-#WORKDIR /app
-#
-#ADD main.py main.py
-#ADD utils.py utils.py
-#ADD env.py env.py
-#ADD user_agents.py user_agents.py
-#ADD telegram_parser.py telegram_parser.py
-#ADD rss_parser.py rss_parser.py
-##ADD bcs_parser.py bcs_parser.py
-#
-#ADD bot.session bot.session
-##ADD gazp.session gazp.session
+ARG PYTHON_VERSION=3.10.6
+FROM python:${PYTHON_VERSION}-slim as base
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    appuser
+
+COPY requirements.txt .
+
+# Install dependencies
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m venv venv && \
+    . venv/bin/activate && \
+    pip install --no-cache-dir -r requirements.txt
+
+USER appuser
+
+COPY . .
+
+EXPOSE 8000
+
+# Run the application.
+CMD ["venv/bin/python", "main.py"]

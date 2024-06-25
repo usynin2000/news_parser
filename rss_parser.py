@@ -20,7 +20,6 @@ async def rss_parser(
     logger=None,
     timeout=10,
 ):
-    """Парсер rss ленты"""
 
     while True:
         try:
@@ -77,7 +76,6 @@ if __name__ == "__main__":
 
     rss_link = ("https://rssexport.rbc.ru/rbcnews/news/20/full.rss",)
 
-    # Очередь из уже опубликованных постов, чтобы их не дублировать
     posted_q = deque(maxlen=20)
 
     httpx_client = httpx.AsyncClient()
