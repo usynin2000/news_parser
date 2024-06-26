@@ -1,6 +1,6 @@
 import asyncio
 from telebot import async_telebot
-from env import BOT_TOKEN, CHAT_ID, ALERT_THREAD
+from config import BOT_TOKEN, CHAT_ID, ALERT_THREAD
 
 
 class TelegramClient:

@@ -5,7 +5,7 @@ import feedparser
 
 from text_generator import generate_text
 from utils import random_user_agent_headers
-from env import ALERT_THREAD
+from config import ALERT_THREAD
 
 
 async def rss_parser(

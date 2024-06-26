@@ -1,10 +1,10 @@
 from collections import deque
 from telethon import TelegramClient, events
 from utils import create_logger
-from env import CHAT_ID
+from config import CHAT_ID
 
 
-from env import API_ID, API_HASH
+from config import API_ID, API_HASH
 
 
 async def telegram_parser(
@@ -79,6 +79,8 @@ if __name__ == "__main__":
     # Очередь из уже опубликованных постов, чтобы их не дублировать
     posted_q = deque(maxlen=20)
 
-    client = telegram_parser("gazp", API_ID, API_HASH, telegram_channels, posted_q, logger=logger)
+    client = telegram_parser(
+        "gazp", API_ID, API_HASH, telegram_channels, posted_q, logger=logger
+    )
 
     client.run_until_disconnected()
