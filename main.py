@@ -7,7 +7,14 @@ from telegram_parser import telegram_parser
 from utils import create_logger
 from bot import send_msg
 
-from config import MASS_MEDIA_THREAD, TECH_THREAD, API_ID, API_HASH, STRING_SESSION
+from config import (
+    MASS_MEDIA_THREAD,
+    TECH_THREAD,
+    ART_THREAD,
+    API_ID,
+    API_HASH,
+    STRING_SESSION,
+)
 from telethon.sessions import StringSession
 
 telegram_channels = {
@@ -40,12 +47,18 @@ rss_channels = {
         "https://feeds.bloomberg.com/technology/news.rss",
         TECH_THREAD,
     ],
-    # "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
+    "www.forbes.com": ["https://rss.app/feeds/0mitjp1cMnXGQkAZ.xml", TECH_THREAD],
+    "Science www.wired.com": [
+        "https://www.wired.com/feed/category/science/latest/rss",
+        TECH_THREAD,
+    ],
+    "AI www.wired.com": ["https://www.wired.com/feed/tag/ai/latest/rss", TECH_THREAD],
+    "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
 }
 
 # Configuration for post filtering
 n_test_chars = 50
-amount_messages = 150
+amount_messages = 300
 posted_q = deque(maxlen=amount_messages)
 timeout = 4
 
