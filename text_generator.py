@@ -3,6 +3,11 @@ def generate_text(title: str, text: str | None, link: str, source: str) -> str:
         "www.bloomberg.com",
         "www.forbes.com",
         "www.artforum.com",
+        "www.reddit.com",
+        "www.ycombinator.com",
+        "www.theguardian.com",
+        "www.arstechnica.com",
+        "www.ft.com",
     ]
     if source in sources_with_bad_summary or text == "":
         return f"""

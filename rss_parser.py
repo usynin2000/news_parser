@@ -36,7 +36,7 @@ async def rss_parser(
 
         feed = feedparser.parse(response.text)
 
-        for entry in feed.entries[:5]:
+        for entry in feed.entries[:3]:
 
             try:
                 summary = entry["summary"]
