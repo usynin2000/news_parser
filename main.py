@@ -19,7 +19,7 @@ from telethon.sessions import StringSession
 
 # Configuration for post filtering
 n_test_chars = 50
-amount_messages = 500
+amount_messages = 300
 posted_q = deque(maxlen=amount_messages)
 timeout = 4
 

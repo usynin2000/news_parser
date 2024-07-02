@@ -1,7 +1,6 @@
 from config import (
     MASS_MEDIA_THREAD,
     TECH_THREAD,
-    ART_THREAD,
 )
 
 rss_channels = {
@@ -28,7 +27,7 @@ rss_channels = {
         TECH_THREAD,
     ],
     "www.wired.com (AI)": ["https://www.wired.com/feed/tag/ai/latest/rss", TECH_THREAD],
-    "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
+    # "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
     "www.ycombinator.com": ["https://news.ycombinator.com/rss", TECH_THREAD],
     "www.reddit.com": [
         "https://www.reddit.com/r/technology/top.rss?t=day",
