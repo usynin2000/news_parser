@@ -96,4 +96,17 @@ rss_channels = {
         "https://techxplore.com/rss-feed/breaking/consumer-gadgets-news/",
         TECH_THREAD,
     ],
+    "www.informationisbeautiful.com": [
+        "https://informationisbeautiful.net/feed/",
+        MASS_MEDIA_THREAD,
+    ],
+    "www.infographicsarchive.com": [
+        "https://www.infographicsarchive.com/feed/",
+        MASS_MEDIA_THREAD,
+    ],
+    "www.visualistan.com": [
+        "https://www.visualistan.com/feeds/posts/default?alt=rss",
+        MASS_MEDIA_THREAD,
+    ],
+    "www.rosstat.gov.ru": ["https://rosstat.gov.ru/folder/313/rss", MASS_MEDIA_THREAD],
 }

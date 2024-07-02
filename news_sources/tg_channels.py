@@ -50,4 +50,6 @@ telegram_channels = {
     1211558444: "https://t.me/twcommunity",
     1134108418: "https://t.me/tbite",
     1007302005: "https://t.me/rozetked",
+    1006503122: "https://t.me/durov",
+    1364081847: "https://t.me/durov_russia",
 }
