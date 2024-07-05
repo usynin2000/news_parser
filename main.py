@@ -56,7 +56,7 @@ async def fetch_with_retry(httpx_client, url, retries=3, timeout=20):
             return response
         except (httpx.RequestError, httpx.HTTPStatusError) as e:
             if attempt < retries - 1:
-                await asyncio.sleep(2**attempt)  # Exponential backoff
+                await asyncio.sleep(timeout**attempt)
                 continue
             else:
                 raise e
