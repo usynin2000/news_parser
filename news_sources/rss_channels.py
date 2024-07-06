@@ -121,28 +121,28 @@ rss_channels = {
         "https://www.reddit.com/r/programming/top.rss?t=day",
         REDDIT_THREAD,
     ],
-    # "www.reddit.com (Webdev)": [
-    #     "https://www.reddit.com/r/webdev/top.rss?t=day",
-    #     REDDIT_THREAD,
-    # ],
-    # "www.reddit.com (AI)": [
-    #     "https://www.reddit.com/r/ArtificialInteligence/top.rss?t=day",
-    #     REDDIT_THREAD,
-    # ],
-    # "www.reddit.com (TechNews)": [
-    #     "https://www.reddit.com/r/technews/top.rss?t=day",
-    #     REDDIT_THREAD,
-    # ],
-    # "www.reddit.com (Cyberpunk)": [
-    #     "https://www.reddit.com/r/Cyberpunk/top.rss?t=day",
-    #     REDDIT_THREAD,
-    # ],
-    # "www.reddit.com (Learn Programming)": [
-    #     "https://www.reddit.com/r/learnprogramming/top.rss?t=day",
-    #     REDDIT_THREAD,
-    # ],
-    # "www.reddit.com (Software)": [
-    #     "https://www.reddit.com/r/software/top.rss?t=day",
-    #     REDDIT_THREAD,
-    # ],
+    "www.reddit.com (Webdev)": [
+        "https://www.reddit.com/r/webdev/top.rss?t=day",
+        REDDIT_THREAD,
+    ],
+    "www.reddit.com (AI)": [
+        "https://www.reddit.com/r/ArtificialInteligence/top.rss?t=day",
+        REDDIT_THREAD,
+    ],
+    "www.reddit.com (TechNews)": [
+        "https://www.reddit.com/r/technews/top.rss?t=day",
+        REDDIT_THREAD,
+    ],
+    "www.reddit.com (Cyberpunk)": [
+        "https://www.reddit.com/r/Cyberpunk/top.rss?t=day",
+        REDDIT_THREAD,
+    ],
+    "www.reddit.com (Learn Programming)": [
+        "https://www.reddit.com/r/learnprogramming/top.rss?t=day",
+        REDDIT_THREAD,
+    ],
+    "www.reddit.com (Software)": [
+        "https://www.reddit.com/r/software/top.rss?t=day",
+        REDDIT_THREAD,
+    ],
 }
