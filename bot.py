@@ -12,7 +12,7 @@ class TelegramClient:
         self,
         text: str,
         chat_id: str = CHAT_ID,
-        thread_id: int = ALERT_THREAD,
+        thread_id: int = None,
         photo: str | None = None,
         parse_mode: str | None = None,
     ) -> None:
@@ -38,10 +38,10 @@ class TelegramClient:
 
 
 async def send_msg(
-    text: str, thread: int = ALERT_THREAD, parse_mode: str | None = None
+    text: str, thread: int = ALERT_THREAD, parse_mode: str | None = None, chat_id=CHAT_ID,
 ):
     bot = TelegramClient(BOT_TOKEN)
-    await bot.send_alert(text, thread_id=thread, parse_mode=parse_mode)
+    await bot.send_alert(text, thread_id=thread, parse_mode=parse_mode, chat_id,)
     await bot.close()
 
 

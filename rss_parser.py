@@ -62,7 +62,10 @@ async def rss_parser(
             if send_message_func is None:
                 print(post, "\n")
             else:
-                await send_message_func(post, thread, parse_mode="HTML")
+                if int(thread) < 0:
+                    send_message_func(post, chat_id=thread)
+                else:
+                    await send_message_func(post, thread, parse_mode="HTML")
 
             # put in queue in the beginning
             posted_q.appendleft(head)

@@ -13,6 +13,7 @@ from config import (
     API_ID,
     API_HASH,
     STRING_SESSION,
+    CHAT_ID,
 )
 from telethon.sessions import StringSession
 
@@ -28,12 +29,12 @@ logger = create_logger("logger")
 logger.info("Start...")
 
 
-async def send_message_func(text, thread, parse_mode=None):
+async def send_message_func(text, thread, chat_id=CHAT_ID, parse_mode=None):
     logger.info(text)
     retry_after = 1
     while True:
         try:
-            await send_msg(text, thread, parse_mode)
+            await send_msg(text, thread, parse_mode, chat_id=CHAT_ID,)
             await asyncio.sleep(timeout * 2)
         except Exception as e:
             if "429" in str(e):

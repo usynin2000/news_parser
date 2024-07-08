@@ -1,7 +1,8 @@
 from config import (
     MASS_MEDIA_THREAD,
     TECH_THREAD,
-    REDDIT_THREAD
+    REDDIT_THREAD,
+    ART_CHAT_ID,
 )
 
 rss_channels = {
@@ -144,5 +145,17 @@ rss_channels = {
     "www.reddit.com (Software)": [
         "https://www.reddit.com/r/software/top.rss?t=day",
         REDDIT_THREAD,
+    ],
+    "www.theartnewspaper.ru": [
+        "https://www.theartnewspaper.ru/rss/",
+        ART_CHAT_ID,
+    ],
+    "www.theguardian.com (Art)": [
+        "https://www.theguardian.com/artanddesign/rss",
+        ART_CHAT_ID,
+    ],
+    "www.bbc.co.uk": [
+        "https://feeds.bbci.co.uk/news/topics/cjnwl8q4gjnt/rss.xml",
+        ART_CHAT_ID,
     ],
 }

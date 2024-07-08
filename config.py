@@ -9,6 +9,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # CHAT ENVS
 CHAT_ID = os.getenv("CHAT_ID")
+ART_CHAT_ID = os.getenv("ART_CHAT_ID")
 ALERT_THREAD = os.getenv("ALERT_THREAD")
 MASS_MEDIA_THREAD = os.getenv("MASS_MEDIA_THREAD")
 TECH_THREAD = os.getenv("TECH_THREAD")
