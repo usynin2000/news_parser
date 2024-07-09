@@ -15,6 +15,7 @@ MASS_MEDIA_THREAD = os.getenv("MASS_MEDIA_THREAD")
 TECH_THREAD = os.getenv("TECH_THREAD")
 ART_THREAD = os.getenv("ART_THREAD")
 REDDIT_THREAD = os.getenv("REDDIT_THREAD")
+CRYPTO_THREAD = os.getenv("CRYPTO_THREAD")
 
 # 'HASH' account (to parse tg channels)
 API_ID = os.getenv("API_ID")

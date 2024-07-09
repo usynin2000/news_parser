@@ -3,31 +3,32 @@ from config import (
     TECH_THREAD,
     REDDIT_THREAD,
     ART_CHAT_ID,
+    CRYPTO_THREAD,
 )
 
 rss_channels = {
-    "www.rbc.ru": [
-        "https://rssexport.rbc.ru/rbcnews/news/20/full.rss",
-        MASS_MEDIA_THREAD,
-    ],
-    "www.vedomosti.ru": [
-        "https://www.vedomosti.ru/rss/rubric/business.xml",
-        MASS_MEDIA_THREAD,
-    ],
-    "www.informationisbeautiful.com": [
-        "https://informationisbeautiful.net/feed/",
-        MASS_MEDIA_THREAD,
-    ],
-    "www.infographicsarchive.com": [
-        "https://www.infographicsarchive.com/feed/",
-        MASS_MEDIA_THREAD,
-    ],
-    "www.visualistan.com": [
-        "https://www.visualistan.com/feeds/posts/default?alt=rss",
-        MASS_MEDIA_THREAD,
-    ],
-    "www.rosstat.gov.ru": ["https://rosstat.gov.ru/folder/313/rss", MASS_MEDIA_THREAD],
-    "www.interfax.ru": ["https://www.interfax.ru/rss.asp", MASS_MEDIA_THREAD],
+    # "www.rbc.ru": [
+    #     "https://rssexport.rbc.ru/rbcnews/news/20/full.rss",
+    #     MASS_MEDIA_THREAD,
+    # ],
+    # "www.vedomosti.ru": [
+    #     "https://www.vedomosti.ru/rss/rubric/business.xml",
+    #     MASS_MEDIA_THREAD,
+    # ],
+    # "www.informationisbeautiful.com": [
+    #     "https://informationisbeautiful.net/feed/",
+    #     MASS_MEDIA_THREAD,
+    # ],
+    # "www.infographicsarchive.com": [
+    #     "https://www.infographicsarchive.com/feed/",
+    #     MASS_MEDIA_THREAD,
+    # ],
+    # "www.visualistan.com": [
+    #     "https://www.visualistan.com/feeds/posts/default?alt=rss",
+    #     MASS_MEDIA_THREAD,
+    # ],
+    # "www.rosstat.gov.ru": ["https://rosstat.gov.ru/folder/313/rss", MASS_MEDIA_THREAD],
+    # "www.interfax.ru": ["https://www.interfax.ru/rss.asp", MASS_MEDIA_THREAD],
     # "www.artforum.com": ["https://www.artsjournal.com/feed", ART_THREAD],
     "www.bloomberg.com": [
         "https://feeds.bloomberg.com/technology/news.rss",
@@ -154,8 +155,8 @@ rss_channels = {
         "https://www.theguardian.com/artanddesign/rss",
         ART_CHAT_ID,
     ],
-    # "www.bbc.co.uk": [
-    #     "https://feeds.bbci.co.uk/news/topics/cjnwl8q4gjnt/rss.xml",
-    #     ART_CHAT_ID,
-    # ],
+    "https://crypto.news/feed/": [
+        "https://crypto.news/feed/",
+        CRYPTO_THREAD,
+    ],
 }
