@@ -34,7 +34,7 @@ async def send_message_func(text, thread, chat_id=CHAT_ID, parse_mode=None):
     retry_after = 1
     while True:
         try:
-            await send_msg(text, thread, parse_mode, chat_id=CHAT_ID,)
+            await send_msg(text, thread, parse_mode, chat_id=chat_id)
             await asyncio.sleep(timeout * 2)
         except Exception as e:
             if "429" in str(e):

@@ -63,7 +63,10 @@ async def rss_parser(
                 print(post, "\n")
             else:
                 if int(thread) < 0:
-                    send_message_func(post, chat_id=thread)
+                    logger.info("Zdes blyat")
+                    await send_message_func(
+                        post, chat_id=thread, thread=None, parse_mode="HTML"
+                    )
                 else:
                     await send_message_func(post, thread, parse_mode="HTML")
 
